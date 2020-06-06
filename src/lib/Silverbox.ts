@@ -1,8 +1,8 @@
 import queryString from 'query-string';
-import { Method, AxiosResponse } from 'axios';
+import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/cdn';
+
 import SilverboxConfig from '../interfaces/SilverboxConfig';
 import SilverboxResponseFile from '../interfaces/SilverboxResponseFile';
-import { makeRequest } from './methods/request';
 import SilverboxParams from '../interfaces/SilverboxParams';
 
 export default class Silverbox {
@@ -21,14 +21,9 @@ export default class Silverbox {
    */
   private key: string;
 
-  private getFullPath(file: string, params?: SilverboxParams) {
+  private getFullPath(file?: string, params?: SilverboxParams) {
     const query = params ? `?${queryString.stringify(params)}` : '';
     return `${this.host}/${this.client}/${file}${query}`;
-  }
-
-  private request(url: string, method?: Method, payload?: Object): Promise<AxiosResponse> {
-    const requestUrl = this.getFullPath(url);
-    return makeRequest(requestUrl, method, payload);
   }
 
   constructor({ host, client, key }: SilverboxConfig) {
@@ -120,18 +115,18 @@ export default class Silverbox {
    * @param fileName
    * @param params - query string params
    */
-  getBinary(fileName: string, params?: SilverboxParams): Promise<AxiosResponse> {
-    const path = this.getFullPath(fileName, params);
-    return makeRequest(path);
+  async getBinary(fileName: string, params?: SilverboxParams): Promise<NodeJS.ReadableStream> {
+    const url = this.getFullPath(fileName, params);
+    return getBinaryFile(url);
   }
 
   /**
    * Returns details about given fileName
    * @param fileName
    */
-  async info(fileName: string): Promise<SilverboxResponseFile> {
-    const { data } = await this.request(`${fileName}/info`);
-    return data;
+  async getInfo(fileName: string): Promise<SilverboxResponseFile> {
+    const url = this.getFullPath(fileName);
+    return getFileInfo(url);
   }
 
   /**
@@ -139,8 +134,8 @@ export default class Silverbox {
    * @param fileName
    */
   async upload(file: any): Promise<SilverboxResponseFile> {
-    const { data } = await this.request('', 'POST', file);
-    return data;
+    const url = this.getFullPath();
+    return uploadFile(url, file);
   }
 
   /**
@@ -148,6 +143,7 @@ export default class Silverbox {
    * @param fileName
    */
   async delete(fileName: string): Promise<void> {
-    await this.request(fileName, 'DELETE');
+    const url = this.getFullPath(fileName);
+    await deleteFile(url);
   }
 }
