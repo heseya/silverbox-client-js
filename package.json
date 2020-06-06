@@ -1,7 +1,7 @@
 {
   "name": "silverbox-client",
-  "version": "1.0.0",
-  "description": "todo",
+  "version": "0.0.1",
+  "description": "Javascript Client for Silverbox API",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
@@ -51,6 +51,8 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "query-string": "^6.13.0",
     "sha.js": "^2.4.11"
   },
   "devDependencies": {

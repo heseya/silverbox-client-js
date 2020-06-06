@@ -1,1 +1,1 @@
-// TODO: import module
+export * from './lib/Silverbox';
