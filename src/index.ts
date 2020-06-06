@@ -1,1 +1,3 @@
-export * from './lib/Silverbox';
+import Silverbox from './lib/Silverbox';
+
+export default Silverbox;
