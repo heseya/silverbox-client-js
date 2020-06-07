@@ -1,39 +1,43 @@
-import queryString from 'query-string';
-import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/cdn';
+import queryString from 'query-string'
+import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/cdn'
 
-import SilverboxConfig from '../interfaces/SilverboxConfig';
-import SilverboxResponseFile from '../interfaces/SilverboxResponseFile';
-import SilverboxParams from '../interfaces/SilverboxParams';
+import SilverboxConfig from '../interfaces/SilverboxConfig'
+import SilverboxResponseFile from '../interfaces/SilverboxResponseFile'
+import SilverboxParams from '../interfaces/SilverboxParams'
 
 export default class Silverbox {
   /**
    * CDN Server URL
    */
-  private host: string;
+  private host: string
 
   /**
    * CDN client name
    */
-  private client: string;
+  private client: string
 
   /**
    * Client acces key
    */
-  private key: string;
+  private key: string
 
   private getFullPath(file?: string, params?: SilverboxParams) {
-    const query = params ? `?${queryString.stringify(params)}` : '';
-    return `${this.host}/${this.client}/${file}${query}`;
+    const query = params ? `?${queryString.stringify(params)}` : ''
+    return `${this.host}/${this.client}/${file}${query}`
   }
 
   constructor({ host, client, key }: SilverboxConfig) {
     if (!host) {
-      throw new Error('[Silverbox] Host cannot be null');
+      throw new Error('[Silverbox] You need to provide a Host URL')
     }
 
-    this.setHost(host);
-    if (client) this.setClient(client);
-    if (key) this.setKey(key);
+    if (!client) {
+      throw new Error('[Silverbox] You need to provide a Client name')
+    }
+
+    this.setHost(host)
+    this.setClient(client)
+    if (key) this.setKey(key)
   }
 
   /**
@@ -42,14 +46,14 @@ export default class Silverbox {
    */
   setHost(host: string): void {
     // TODO: host validation
-    this.host = host;
+    this.host = host
   }
 
   /**
    * @returns Current host name
    */
-  getHost() {
-    return this.host;
+  getHost(): string {
+    return this.host
   }
 
   /**
@@ -58,14 +62,14 @@ export default class Silverbox {
    */
   setClient(client: string): void {
     // TODO: client validation
-    this.client = client;
+    this.client = client
   }
 
   /**
    * @returns Current client name
    */
-  getClient() {
-    return this.client;
+  getClient(): string {
+    return this.client
   }
 
   /**
@@ -73,7 +77,7 @@ export default class Silverbox {
    * @param key - new key
    */
   setKey(key: string): void {
-    this.key = key;
+    this.key = key
   }
 
   /**
@@ -84,8 +88,8 @@ export default class Silverbox {
     return new Silverbox({
       host: this.host,
       client: this.client,
-      key: this.key
-    });
+      key: this.key,
+    })
   }
 
   /**
@@ -95,10 +99,10 @@ export default class Silverbox {
    * @returns modified instance
    */
   as(client: string, key: string = null): Silverbox {
-    const clone = this.clone();
-    clone.setClient(client);
-    clone.setKey(key);
-    return clone;
+    const clone = this.clone()
+    clone.setClient(client)
+    clone.setKey(key)
+    return clone
   }
 
   /**
@@ -107,7 +111,7 @@ export default class Silverbox {
    * @param params - query string params
    */
   get(fileName: string, params?: SilverboxParams): string {
-    return this.getFullPath(fileName, params);
+    return this.getFullPath(fileName, params)
   }
 
   /**
@@ -116,8 +120,8 @@ export default class Silverbox {
    * @param params - query string params
    */
   async getBinary(fileName: string, params?: SilverboxParams): Promise<NodeJS.ReadableStream> {
-    const url = this.getFullPath(fileName, params);
-    return getBinaryFile(url);
+    const url = this.getFullPath(fileName, params)
+    return getBinaryFile(url)
   }
 
   /**
@@ -125,8 +129,8 @@ export default class Silverbox {
    * @param fileName
    */
   async getInfo(fileName: string): Promise<SilverboxResponseFile> {
-    const url = this.getFullPath(fileName);
-    return getFileInfo(url);
+    const url = this.getFullPath(fileName)
+    return getFileInfo(url)
   }
 
   /**
@@ -134,8 +138,8 @@ export default class Silverbox {
    * @param fileName
    */
   async upload(file: any): Promise<SilverboxResponseFile> {
-    const url = this.getFullPath();
-    return uploadFile(url, file);
+    const url = this.getFullPath()
+    return uploadFile(url, file)
   }
 
   /**
@@ -143,7 +147,7 @@ export default class Silverbox {
    * @param fileName
    */
   async delete(fileName: string): Promise<void> {
-    const url = this.getFullPath(fileName);
-    await deleteFile(url);
+    const url = this.getFullPath(fileName)
+    await deleteFile(url)
   }
 }

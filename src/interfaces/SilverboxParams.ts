@@ -2,15 +2,15 @@ export default interface SilverboxParams {
   /**
    * Width of wanted image
    */
-  w?: string;
+  w?: string
 
   /**
    * Height of wanted image
    */
-  h?: string;
+  h?: string
 
   /**
    * Aspect ratio of wanted image
    */
-  ratio?: string;
+  ratio?: string
 }

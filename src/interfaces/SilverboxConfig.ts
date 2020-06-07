@@ -2,15 +2,15 @@ export default interface SilverboxConfig {
   /**
    * CDN Server URL
    */
-  host: string;
+  host: string
 
   /**
    * CDN client name
    */
-  client?: string;
+  client: string
 
   /**
    * Client access key
    */
-  key?: string;
+  key?: string
 }
