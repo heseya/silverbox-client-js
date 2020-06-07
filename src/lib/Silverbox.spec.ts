@@ -47,12 +47,24 @@ test('Silverbox get file as other client', (t) => {
   t.is(path, 'https://cdn.heseya.com/test/image.jpg')
 })
 
-test('Silverbox constructor fails', async (t) => {
+test('Silverbox no host provided', async (t) => {
   const error = await t.throws(() => {
     new Silverbox({
       host: null,
+      client: null,
     })
   })
 
-  t.is(error.message, '[Silverbox] Host cannot be null')
+  t.is(error.message, '[Silverbox] You need to provide a Host URL')
+})
+
+test('Silverbox no client provided', async (t) => {
+  const error = await t.throws(() => {
+    new Silverbox({
+      host: CREDENTIALS.host,
+      client: null,
+    })
+  })
+
+  t.is(error.message, '[Silverbox] You need to provide a Client name')
 })

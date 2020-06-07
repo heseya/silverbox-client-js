@@ -121,7 +121,7 @@ export default class Silverbox {
    */
   async getBinary(fileName: string, params?: SilverboxParams): Promise<NodeJS.ReadableStream> {
     const url = this.getFullPath(fileName, params)
-    return getBinaryFile(url)
+    return getBinaryFile(url, this.key)
   }
 
   /**
@@ -130,16 +130,16 @@ export default class Silverbox {
    */
   async getInfo(fileName: string): Promise<SilverboxResponseFile> {
     const url = this.getFullPath(fileName)
-    return getFileInfo(url)
+    return getFileInfo(url, this.key)
   }
 
   /**
    * Uploads new file to CDN, and returns details about him
    * @param fileName
    */
-  async upload(file: any): Promise<SilverboxResponseFile> {
+  async upload(file: NodeJS.ReadableStream): Promise<SilverboxResponseFile> {
     const url = this.getFullPath()
-    return uploadFile(url, file)
+    return uploadFile(url, file, this.key)
   }
 
   /**
@@ -148,6 +148,6 @@ export default class Silverbox {
    */
   async delete(fileName: string): Promise<void> {
     const url = this.getFullPath(fileName)
-    await deleteFile(url)
+    await deleteFile(url, this.key)
   }
 }
