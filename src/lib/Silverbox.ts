@@ -5,6 +5,19 @@ import SilverboxConfig from '../interfaces/SilverboxConfig'
 import SilverboxFile from '../interfaces/SilverboxFile'
 import SilverboxImageParams from '../interfaces/SilverboxImageParams'
 
+/**
+ * Main library Object
+ * It is responsible for whole communication with Silverbox Host
+ *
+ * Basic usage example:
+ *
+ * ```ts
+ * import Silverbox from 'silverbox-client';
+ *
+ * const silverbox = new Silverbox({host: 'https://example.com', client: 'test'})
+ * silverbox.getURL('image.png') //=> https://example.com/test/image.png
+ * ```
+ */
 export default class Silverbox {
   /**
    * CDN Server URL

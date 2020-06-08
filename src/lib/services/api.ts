@@ -45,7 +45,7 @@ export const deleteFile = async (fileURL: string, key: string): Promise<void> =>
 }
 
 /**
- * Returns given file as a Binary stream
+ * @description Returns given file as a Binary stream
  * @param fileURL - file full URL
  * @param key - authorization key
  * @returns stream object with downloaded file

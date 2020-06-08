@@ -40,7 +40,7 @@ test('Silverbox returns full file path', (t) => {
   t.is(path, 'https://cdn.example.com/example/image.png')
 })
 
-test('Silverbox get file as other client', (t) => {
+test('Silverbox get file URL as other client', (t) => {
   const silverbox = new Silverbox(CREDENTIALS)
   const path = silverbox.as('test').getURL('image.jpg')
 
