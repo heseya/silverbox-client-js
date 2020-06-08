@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import FormData from 'form-data'
 
-import SilverboxResponseFile from '../../interfaces/SilverboxResponseFile'
+import SilverboxResponseFile from '../../interfaces/SilverboxFile'
 
 /**
  * Upload new file to CDN

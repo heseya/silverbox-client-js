@@ -1,9 +1,9 @@
 import queryString from 'query-string'
-import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/cdn'
+import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/api'
 
 import SilverboxConfig from '../interfaces/SilverboxConfig'
-import SilverboxResponseFile from '../interfaces/SilverboxResponseFile'
-import SilverboxParams from '../interfaces/SilverboxParams'
+import SilverboxResponseFile from '../interfaces/SilverboxFile'
+import SilverboxParams from '../interfaces/SilverboxImageParams'
 
 export default class Silverbox {
   /**
@@ -21,7 +21,7 @@ export default class Silverbox {
    */
   private key: string
 
-  private getFullPath(file?: string, params?: SilverboxParams) {
+  private getFullPath(file?: string, params?: SilverboxParams): string {
     const query = params ? `?${queryString.stringify(params)}` : ''
     return `${this.host}/${this.client}/${file}${query}`
   }
