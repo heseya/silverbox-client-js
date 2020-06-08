@@ -1,4 +1,4 @@
-export default interface SilverboxParams {
+export default interface SilverboxImageParams {
   /**
    * Width of wanted image
    */

@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import FormData from 'form-data'
 
-import SilverboxResponseFile from '../../interfaces/SilverboxFile'
+import SilverboxFile from '../../interfaces/SilverboxFile'
 
 /**
  * Upload new file to CDN
@@ -11,11 +11,13 @@ import SilverboxResponseFile from '../../interfaces/SilverboxFile'
  */
 export const uploadFile = async (
   url: string,
-  file: NodeJS.ReadableStream,
+  files: NodeJS.ReadableStream[],
   key: string
-): Promise<SilverboxResponseFile> => {
+): Promise<SilverboxFile[]> => {
   const formData = new FormData()
-  formData.append('file', file) // TODO: Check if key should be 'file'
+  files.forEach((file, i) => {
+    formData.append(`files[${i}]`, file)
+  })
 
   const { data } = await Axios(url, {
     method: 'POST',
@@ -46,7 +48,7 @@ export const deleteFile = async (fileURL: string, key: string): Promise<void> =>
  * @param fileURL - file full URL
  * @param key - authorization key
  */
-export const getBinaryFile = async (
+export const getFileStream = async (
   fileURL: string,
   key: string
 ): Promise<NodeJS.ReadableStream> => {
@@ -65,7 +67,7 @@ export const getBinaryFile = async (
  * @param fileURL - file full URL
  * @param key - authorization key
  */
-export const getFileInfo = async (fileURL: string, key: string): Promise<SilverboxResponseFile> => {
+export const getFileInfo = async (fileURL: string, key: string): Promise<SilverboxFile> => {
   const { data } = await Axios(`${fileURL}/info`, {
     method: 'GET',
     headers: {

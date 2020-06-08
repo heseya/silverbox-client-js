@@ -36,13 +36,13 @@ test('Silverbox clone instance', (t) => {
 
 test('Silverbox returns full file path', (t) => {
   const silverbox = new Silverbox(CREDENTIALS)
-  const path = silverbox.get('image.png')
+  const path = silverbox.getURL('image.png')
   t.is(path, 'https://cdn.example.com/example/image.png')
 })
 
 test('Silverbox get file as other client', (t) => {
   const silverbox = new Silverbox(CREDENTIALS)
-  const path = silverbox.as('test').get('image.jpg')
+  const path = silverbox.as('test').getURL('image.jpg')
 
   t.is(path, 'https://cdn.example.com/test/image.jpg')
 })

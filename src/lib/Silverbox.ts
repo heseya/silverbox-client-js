@@ -1,9 +1,9 @@
 import queryString from 'query-string'
-import { getBinaryFile, getFileInfo, uploadFile, deleteFile } from './services/api'
+import { getFileStream, getFileInfo, uploadFile, deleteFile } from './services/api'
 
 import SilverboxConfig from '../interfaces/SilverboxConfig'
-import SilverboxResponseFile from '../interfaces/SilverboxFile'
-import SilverboxParams from '../interfaces/SilverboxImageParams'
+import SilverboxFile from '../interfaces/SilverboxFile'
+import SilverboxImageParams from '../interfaces/SilverboxImageParams'
 
 export default class Silverbox {
   /**
@@ -20,11 +20,6 @@ export default class Silverbox {
    * Client acces key
    */
   private key: string
-
-  private getFullPath(file?: string, params?: SilverboxParams): string {
-    const query = params ? `?${queryString.stringify(params)}` : ''
-    return `${this.host}/${this.client}/${file}${query}`
-  }
 
   constructor({ host, client, key }: SilverboxConfig) {
     if (!host) {
@@ -110,26 +105,27 @@ export default class Silverbox {
    * @param fileName
    * @param params - query string params
    */
-  get(fileName: string, params?: SilverboxParams): string {
-    return this.getFullPath(fileName, params)
+  getURL(fileName?: string, params?: SilverboxImageParams): string {
+    const query = params ? `?${queryString.stringify(params)}` : ''
+    return `${this.host}/${this.client}/${fileName}${query}`
   }
 
   /**
-   * Returns binary object of given fileName
+   * Returns stream object of given fileName
    * @param fileName
    * @param params - query string params
    */
-  async getBinary(fileName: string, params?: SilverboxParams): Promise<NodeJS.ReadableStream> {
-    const url = this.getFullPath(fileName, params)
-    return getBinaryFile(url, this.key)
+  async get(fileName: string, params?: SilverboxImageParams): Promise<NodeJS.ReadableStream> {
+    const url = this.getURL(fileName, params)
+    return getFileStream(url, this.key)
   }
 
   /**
    * Returns details about given fileName
    * @param fileName
    */
-  async getInfo(fileName: string): Promise<SilverboxResponseFile> {
-    const url = this.getFullPath(fileName)
+  async getInfo(fileName: string): Promise<SilverboxFile> {
+    const url = this.getURL(fileName)
     return getFileInfo(url, this.key)
   }
 
@@ -137,9 +133,9 @@ export default class Silverbox {
    * Uploads new file to CDN, and returns details about him
    * @param fileName
    */
-  async upload(file: NodeJS.ReadableStream): Promise<SilverboxResponseFile> {
-    const url = this.getFullPath()
-    return uploadFile(url, file, this.key)
+  async upload(files: NodeJS.ReadableStream[]): Promise<SilverboxFile[]> {
+    const url = this.getURL()
+    return uploadFile(url, files, this.key)
   }
 
   /**
@@ -147,7 +143,7 @@ export default class Silverbox {
    * @param fileName
    */
   async delete(fileName: string): Promise<void> {
-    const url = this.getFullPath(fileName)
+    const url = this.getURL(fileName)
     await deleteFile(url, this.key)
   }
 }
