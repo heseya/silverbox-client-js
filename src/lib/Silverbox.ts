@@ -45,7 +45,7 @@ export default class Silverbox {
   }
 
   /**
-   * @returns Current host name
+   * @returns current host name
    */
   getHost(): string {
     return this.host
@@ -61,7 +61,7 @@ export default class Silverbox {
   }
 
   /**
-   * @returns Current client name
+   * @returns current client name
    */
   getClient(): string {
     return this.client
@@ -104,6 +104,7 @@ export default class Silverbox {
    * Returns full URL for given fileName
    * @param fileName
    * @param params - query string params
+   * @returns full file URL
    */
   getURL(fileName?: string, params?: SilverboxImageParams): string {
     const query = params ? `?${queryString.stringify(params)}` : ''
@@ -114,6 +115,7 @@ export default class Silverbox {
    * Returns stream object of given fileName
    * @param fileName
    * @param params - query string params
+   * @return stream object with downloaded file
    */
   async get(fileName: string, params?: SilverboxImageParams): Promise<NodeJS.ReadableStream> {
     const url = this.getURL(fileName, params)
@@ -123,6 +125,7 @@ export default class Silverbox {
   /**
    * Returns details about given fileName
    * @param fileName
+   * @returns informations about file
    */
   async getInfo(fileName: string): Promise<SilverboxFile> {
     const url = this.getURL(fileName)
@@ -131,7 +134,8 @@ export default class Silverbox {
 
   /**
    * Uploads new file to CDN, and returns details about him
-   * @param fileName
+   * @param files
+   * @returns informations about uploaded file
    */
   async upload(files: NodeJS.ReadableStream[]): Promise<SilverboxFile[]> {
     const url = this.getURL()
