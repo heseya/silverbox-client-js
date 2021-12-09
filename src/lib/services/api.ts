@@ -1,7 +1,7 @@
-import Axios from 'axios'
-import FormData from 'form-data'
+import Axios from 'axios';
+import FormData from 'form-data';
 
-import SilverboxFile from '../../interfaces/SilverboxFile'
+import SilverboxFile from '../../interfaces/SilverboxFile';
 
 /**
  * Upload new file to CDN
@@ -12,23 +12,35 @@ import SilverboxFile from '../../interfaces/SilverboxFile'
  */
 export const uploadFile = async (
   url: string,
-  files: NodeJS.ReadableStream[],
+  file: Buffer,
+  filename: string,
   key: string
-): Promise<SilverboxFile[]> => {
-  const formData = new FormData()
-  files.forEach((file, i) => {
-    formData.append(`files[${i}]`, file)
-  })
+): Promise<SilverboxFile> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file, { filename });
 
-  const { data } = await Axios(url, {
-    method: 'POST',
-    data: formData,
-    headers: {
-      Authorization: key,
-    },
-  })
-  return data
-}
+    const response = await Axios(url, {
+      method: 'POST',
+      data: formData,
+      headers: {
+        'x-api-key': key,
+        ...formData.getHeaders(),
+      },
+    });
+
+    if (!response.data[0]) throw new Error('File was not uploaded');
+
+    return response.data[0];
+  } catch (e) {
+    if (e.response?.status === 401)
+      throw new Error('Silverbox authorization credentials are invalid');
+
+    if (e.response?.status === 403) throw new Error('Silverbox returned Forbidden response');
+
+    throw e;
+  }
+};
 
 /**
  * Delete given file from CDN
@@ -39,10 +51,10 @@ export const deleteFile = async (fileURL: string, key: string): Promise<void> =>
   await Axios(fileURL, {
     method: 'DELETE',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
-  })
-}
+  });
+};
 
 /**
  * @description Returns given file as a Binary stream
@@ -58,11 +70,11 @@ export const getFileStream = async (
     method: 'GET',
     responseType: 'stream',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
-  })
-  return data
-}
+  });
+  return data;
+};
 
 /**
  * Returns information about given file
@@ -74,8 +86,8 @@ export const getFileInfo = async (fileURL: string, key: string): Promise<Silverb
   const { data } = await Axios(`${fileURL}/info`, {
     method: 'GET',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
-  })
-  return data
-}
+  });
+  return data;
+};

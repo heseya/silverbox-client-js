@@ -1,5 +1,9 @@
 export default interface SilverboxFile {
-  id: string
-  owner: string
-  path: string
+  name: string;
+  owner: string;
+  visibility: string;
+  patch: string;
+  mime: string;
+  size: string;
+  lastModified: string;
 }
