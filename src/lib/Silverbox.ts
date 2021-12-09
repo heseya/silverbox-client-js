@@ -147,12 +147,12 @@ export class Silverbox {
 
   /**
    * Uploads new file to CDN, and returns details about him
-   * @param files
+   * @param file
    * @returns informations about uploaded file
    */
-  async upload(files: NodeJS.ReadableStream[]): Promise<SilverboxFile[]> {
-    const url = this.getURL();
-    return uploadFile(url, files, this.key);
+  async upload(filename: string, buffer: Buffer): Promise<SilverboxFile> {
+    const url = `${this.host}/${this.client}`;
+    return uploadFile(url, buffer, filename, this.key);
   }
 
   /**

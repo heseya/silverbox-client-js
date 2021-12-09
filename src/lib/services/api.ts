@@ -12,22 +12,34 @@ import SilverboxFile from '../../interfaces/SilverboxFile';
  */
 export const uploadFile = async (
   url: string,
-  files: NodeJS.ReadableStream[],
+  file: Buffer,
+  filename: string,
   key: string
-): Promise<SilverboxFile[]> => {
-  const formData = new FormData();
-  files.forEach((file, i) => {
-    formData.append(`files[${i}]`, file);
-  });
+): Promise<SilverboxFile> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file, { filename });
 
-  const { data } = await Axios(url, {
-    method: 'POST',
-    data: formData,
-    headers: {
-      Authorization: key,
-    },
-  });
-  return data;
+    const response = await Axios(url, {
+      method: 'POST',
+      data: formData,
+      headers: {
+        'x-api-key': key,
+        ...formData.getHeaders(),
+      },
+    });
+
+    if (!response.data[0]) throw new Error('File was not uploaded');
+
+    return response.data[0];
+  } catch (e) {
+    if (e.response?.status === 401)
+      throw new Error('Silverbox authorization credentials are invalid');
+
+    if (e.response?.status === 403) throw new Error('Silverbox returned Forbidden response');
+
+    throw e;
+  }
 };
 
 /**
