@@ -51,7 +51,7 @@ export const deleteFile = async (fileURL: string, key: string): Promise<void> =>
   await Axios(fileURL, {
     method: 'DELETE',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
   });
 };
@@ -70,7 +70,7 @@ export const getFileStream = async (
     method: 'GET',
     responseType: 'stream',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
   });
   return data;
@@ -86,7 +86,7 @@ export const getFileInfo = async (fileURL: string, key: string): Promise<Silverb
   const { data } = await Axios(`${fileURL}/info`, {
     method: 'GET',
     headers: {
-      Authorization: key,
+      'x-api-key': key,
     },
   });
   return data;
