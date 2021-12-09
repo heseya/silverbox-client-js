@@ -1,7 +1,7 @@
-import Axios from 'axios'
-import FormData from 'form-data'
+import Axios from 'axios';
+import FormData from 'form-data';
 
-import SilverboxFile from '../../interfaces/SilverboxFile'
+import SilverboxFile from '../../interfaces/SilverboxFile';
 
 /**
  * Upload new file to CDN
@@ -15,10 +15,10 @@ export const uploadFile = async (
   files: NodeJS.ReadableStream[],
   key: string
 ): Promise<SilverboxFile[]> => {
-  const formData = new FormData()
+  const formData = new FormData();
   files.forEach((file, i) => {
-    formData.append(`files[${i}]`, file)
-  })
+    formData.append(`files[${i}]`, file);
+  });
 
   const { data } = await Axios(url, {
     method: 'POST',
@@ -26,9 +26,9 @@ export const uploadFile = async (
     headers: {
       Authorization: key,
     },
-  })
-  return data
-}
+  });
+  return data;
+};
 
 /**
  * Delete given file from CDN
@@ -41,8 +41,8 @@ export const deleteFile = async (fileURL: string, key: string): Promise<void> =>
     headers: {
       Authorization: key,
     },
-  })
-}
+  });
+};
 
 /**
  * @description Returns given file as a Binary stream
@@ -60,9 +60,9 @@ export const getFileStream = async (
     headers: {
       Authorization: key,
     },
-  })
-  return data
-}
+  });
+  return data;
+};
 
 /**
  * Returns information about given file
@@ -76,6 +76,6 @@ export const getFileInfo = async (fileURL: string, key: string): Promise<Silverb
     headers: {
       Authorization: key,
     },
-  })
-  return data
-}
+  });
+  return data;
+};

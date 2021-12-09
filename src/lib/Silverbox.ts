@@ -1,9 +1,9 @@
-import queryString from 'query-string'
-import { getFileStream, getFileInfo, uploadFile, deleteFile } from './services/api'
+import queryString from 'query-string';
+import { getFileStream, getFileInfo, uploadFile, deleteFile } from './services/api';
 
-import SilverboxConfig from '../interfaces/SilverboxConfig'
-import SilverboxFile from '../interfaces/SilverboxFile'
-import SilverboxImageParams from '../interfaces/SilverboxImageParams'
+import SilverboxConfig from '../interfaces/SilverboxConfig';
+import SilverboxFile from '../interfaces/SilverboxFile';
+import SilverboxImageParams from '../interfaces/SilverboxImageParams';
 
 /**
  * Main library Object
@@ -18,34 +18,34 @@ import SilverboxImageParams from '../interfaces/SilverboxImageParams'
  * silverbox.getURL('image.png') //=> https://example.com/test/image.png
  * ```
  */
-export default class Silverbox {
+export class Silverbox {
   /**
    * CDN Server URL
    */
-  private host: string
+  private host: string;
 
   /**
    * CDN client name
    */
-  private client: string
+  private client: string;
 
   /**
    * Client acces key
    */
-  private key: string
+  private key: string;
 
   constructor({ host, client, key }: SilverboxConfig) {
     if (!host) {
-      throw new Error('[Silverbox] You need to provide a Host URL')
+      throw new Error('[Silverbox] You need to provide a Host URL');
     }
 
     if (!client) {
-      throw new Error('[Silverbox] You need to provide a Client name')
+      throw new Error('[Silverbox] You need to provide a Client name');
     }
 
-    this.setHost(host)
-    this.setClient(client)
-    if (key) this.setKey(key)
+    this.setHost(host);
+    this.setClient(client);
+    if (key) this.setKey(key);
   }
 
   /**
@@ -54,14 +54,14 @@ export default class Silverbox {
    */
   setHost(host: string): void {
     // TODO: host validation
-    this.host = host
+    this.host = host;
   }
 
   /**
    * @returns current host name
    */
   getHost(): string {
-    return this.host
+    return this.host;
   }
 
   /**
@@ -70,14 +70,14 @@ export default class Silverbox {
    */
   setClient(client: string): void {
     // TODO: client validation
-    this.client = client
+    this.client = client;
   }
 
   /**
    * @returns current client name
    */
   getClient(): string {
-    return this.client
+    return this.client;
   }
 
   /**
@@ -85,7 +85,7 @@ export default class Silverbox {
    * @param key - new key
    */
   setKey(key: string): void {
-    this.key = key
+    this.key = key;
   }
 
   /**
@@ -97,7 +97,7 @@ export default class Silverbox {
       host: this.host,
       client: this.client,
       key: this.key,
-    })
+    });
   }
 
   /**
@@ -107,10 +107,10 @@ export default class Silverbox {
    * @returns modified instance
    */
   as(client: string, key: string = null): Silverbox {
-    const clone = this.clone()
-    clone.setClient(client)
-    clone.setKey(key)
-    return clone
+    const clone = this.clone();
+    clone.setClient(client);
+    clone.setKey(key);
+    return clone;
   }
 
   /**
@@ -120,8 +120,8 @@ export default class Silverbox {
    * @returns full file URL
    */
   getURL(fileName?: string, params?: SilverboxImageParams): string {
-    const query = params ? `?${queryString.stringify(params)}` : ''
-    return `${this.host}/${this.client}/${fileName}${query}`
+    const query = params ? `?${queryString.stringify(params)}` : '';
+    return `${this.host}/${this.client}/${fileName}${query}`;
   }
 
   /**
@@ -131,8 +131,8 @@ export default class Silverbox {
    * @return stream object with downloaded file
    */
   async get(fileName: string, params?: SilverboxImageParams): Promise<NodeJS.ReadableStream> {
-    const url = this.getURL(fileName, params)
-    return getFileStream(url, this.key)
+    const url = this.getURL(fileName, params);
+    return getFileStream(url, this.key);
   }
 
   /**
@@ -141,8 +141,8 @@ export default class Silverbox {
    * @returns informations about file
    */
   async getInfo(fileName: string): Promise<SilverboxFile> {
-    const url = this.getURL(fileName)
-    return getFileInfo(url, this.key)
+    const url = this.getURL(fileName);
+    return getFileInfo(url, this.key);
   }
 
   /**
@@ -151,8 +151,8 @@ export default class Silverbox {
    * @returns informations about uploaded file
    */
   async upload(files: NodeJS.ReadableStream[]): Promise<SilverboxFile[]> {
-    const url = this.getURL()
-    return uploadFile(url, files, this.key)
+    const url = this.getURL();
+    return uploadFile(url, files, this.key);
   }
 
   /**
@@ -160,7 +160,7 @@ export default class Silverbox {
    * @param fileName
    */
   async delete(fileName: string): Promise<void> {
-    const url = this.getURL(fileName)
-    await deleteFile(url, this.key)
+    const url = this.getURL(fileName);
+    await deleteFile(url, this.key);
   }
 }
